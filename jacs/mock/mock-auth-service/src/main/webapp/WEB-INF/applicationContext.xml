@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	
+	<context:component-scan base-package="org.satriaprayoga.jacs.mock"/>
+	
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service id="userService">
+				<security:user name="admin" password="password" authorities="admin"/>
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<security:http create-session="stateless" use-expressions="true">
+		<security:intercept-url pattern="/services/timeoftheday/asplaintext/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/services/timeoftheday/asxml/**"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/services/timeoftheday/asjson/**"
+			access="hasAnyRole('admin')" />
+		<security:http-basic />
+	</security:http>
+
+</beans>
